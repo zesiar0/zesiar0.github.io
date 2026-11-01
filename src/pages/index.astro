@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Socials from "@/components/Socials.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import Card from "@/components/Card.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import { SITE } from "@/config";
+
+const posts = getSortedPosts(await getCollection("blog"));
+---
+
+<Layout>
+  <Header />
+  <main id="main-content" data-layout="index" class="app-layout">
+    <section
+      id="hero"
+      class="border-b border-border pt-8 pb-6 sm:min-h-[405px] sm:pt-10"
+    >
+      <p class="mt-1 text-base">你好，我是</p>
+      <h1 class="mt-6 mb-7 text-4xl font-bold tracking-tight sm:text-5xl">
+        jiahua
+      </h1>
+      <p class="font-semibold text-accent">写代码，也记录思考。</p>
+      <h2 class="mt-7 mb-2 text-xl font-semibold">关于我</h2>
+      <p class="leading-6">
+        一个喜欢编程与探索的技术爱好者。在这里，记录开发中的问题、解决方法，以及值得留下的学习笔记。
+      </p>
+      <p class="mt-2 leading-6">
+        关注软件开发、实用工具与持续学习。把复杂的问题慢慢想清楚，把有用的经验认真写下来。
+      </p>
+      <div class="mt-5 flex items-center gap-2">
+        <span>找到我：</span>
+        <Socials />
+      </div>
+    </section>
+    <section id="recent-posts" class="pt-10 pb-6 sm:pt-12">
+      <div class="flex items-baseline justify-between gap-4">
+        <h2 class="text-2xl font-semibold tracking-wide">最新文章</h2>
+        <span class="text-xs text-foreground/60">保持好奇，持续记录</span>
+      </div>
+      <ul>
+        {
+          posts
+            .slice(0, SITE.postPerIndex)
+            .map(data => <Card variant="h3" {...data} />)
+        }
+      </ul>
+    </section>
+    <div class="my-7 text-center">
+      <LinkButton href="/posts/" class="gap-2 hover:text-accent">
+        查看全部文章
+        <IconArrowRight class="inline-block" />
+      </LinkButton>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    if (document.querySelector('[data-layout="index"]')) {
+      sessionStorage.setItem("backUrl", "/");
+    }
+  });
+</script>
